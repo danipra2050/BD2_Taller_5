@@ -6,6 +6,7 @@ public class Request {
     private String owner;
     private String mail;
     private String specie;
+    private String urlPhoto;
 
     public Request() {
     }
@@ -40,5 +41,13 @@ public class Request {
 
     public void setMail(String mail) {
         this.mail = mail;
+    }
+
+    public String getUrlPhoto() {
+        return urlPhoto;
+    }
+
+    public void setUrlPhoto(String urlPhoto) {
+        this.urlPhoto = urlPhoto;
     }
 }

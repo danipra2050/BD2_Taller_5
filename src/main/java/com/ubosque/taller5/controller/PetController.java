@@ -11,8 +11,14 @@ public class PetController implements IPets {
     private Driver driver;
 
     @Override
-    public boolean createPet(String specie) {
-        return false;
+    public int createPet(String name, String species) {
+        driver = new NeoConfig().getDriver();
+        try(Session session = driver.session()){
+            String nodeName = name.trim().replace(" ", "").toLowerCase();
+            Result result = session.run("CREATE ("+nodeName+": Pet {name: '" + name +"', species: '" + species + "'}) RETURN id("+nodeName+")");
+
+            return result.single().get(0).asInt();
+        }
     }
 
     @Override
@@ -27,7 +33,23 @@ public class PetController implements IPets {
     }
 
     @Override
-    public boolean createPhoto() {
-        return false;
+    public int createPhoto(String name, String urlPhoto) {
+        driver = new NeoConfig().getDriver();
+        try(Session session = driver.session()){
+            String nodeName = name.trim().replace(" ", "").toLowerCase();
+            Result result = session.run("CREATE ("+nodeName+": Photo {url: '" + urlPhoto +"'}) RETURN id("+nodeName+")");
+
+            return result.single().get(0).asInt();
+        }
+    }
+
+    @Override
+    public void petRelation(String petName, String ownerName) {
+        driver = new NeoConfig().getDriver();
+        try(Session session = driver.session()){
+            Result result = session.run("MATCH (mascota:Pet) WHERE mascota.name = '"+petName+"'"+
+                    "MATCH (persona:Person) WHERE persona.name = '"+ ownerName +"' " +
+                    "CREATE(mascota)-[:BELONGS]->(persona)");
+        }
     }
 }
